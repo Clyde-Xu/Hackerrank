@@ -1,0 +1,56 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <limits.h>
+using namespace std;
+#define NUM 1000000000
+
+long access(int current, vector<int> &loop, vector<int> &visited, vector<long> &paths, vector<vector<int>> &conn) {
+    if (paths[current] != -1)
+        return paths[current];
+    else if (visited[current]) {
+        loop[current] = 1;
+        return 0;
+    }
+    visited[current] = 1;
+    long total = 0;
+    if (current == conn.size() - 1)
+        total = 1;
+    for (int next : conn[current]) {
+        long number = access(next, loop, visited, paths, conn);
+        if (number == LONG_MAX) {
+            total = LONG_MAX;
+            break;
+        }
+        total = (total + number % NUM) % NUM;
+    }
+    if (total > 0 && loop[current])
+        paths[current] = LONG_MAX;
+    else
+        paths[current] = total;
+    visited[current] = 0;
+    return paths[current];
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+    int num1, num2;
+    cin >> num1 >> num2;
+    vector<vector<int>> conn(num1 + 1);
+    vector<long> paths(num1 + 1, -1);
+    vector<int> loop(num1 + 1);
+    vector<int> visited(num1 + 1);
+    while (num2--) {
+        int from, to;
+        cin >> from >> to;
+        conn[from].push_back(to);
+    }
+    long total = access(1, loop, visited, paths, conn);
+    if (total == LONG_MAX)
+        cout << "INFINITE PATHS" << endl;
+    else
+        cout << total << endl;
+    return 0;
+}
