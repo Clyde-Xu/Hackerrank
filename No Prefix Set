@@ -1,0 +1,44 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class TrieNode {
+public:
+    TrieNode *children[26] = {NULL};
+    int isWord = false;
+};
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+    int num;
+    cin >> num;
+    string str;
+    TrieNode *root = new TrieNode();
+    while (num--) {
+        cin >> str;
+        TrieNode *node = root;
+        int size = str.size();
+        for (int i = 0; i < size; i++) {
+            int index = str[i] - 'a';
+            if (node->children[index] == NULL)
+                node->children[index] = new TrieNode();
+            else {
+                if (i == size - 1) {
+                    cout << "BAD SET" << endl << str << endl;
+                    return 0;
+                }
+            }
+            node = node->children[index];
+            if (node->isWord) {
+                cout << "BAD SET" << endl << str << endl;
+                return 0;
+            }
+        }
+        node->isWord = true;
+    }
+    cout << "GOOD SET" << endl;
+    return 0;
+}
