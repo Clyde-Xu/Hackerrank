@@ -1,0 +1,34 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+    int num;
+    cin >> num;
+    while(num--) {
+        int count, total;
+        cin >> count >> total;
+        int cost[total + 1] = {0};
+        for(int j = 0; j < count; j++) {
+            int current;
+            cin >> current;
+            for(int k = total; k >= 0; k--) {
+                if(current > k)
+                    cost[k] += current;
+                else {
+                    cost[k] = min(cost[k] + current, cost[k - current]);
+                }
+            }
+        }
+        if(cost[total] <= total)
+            cout << "YES" << endl;
+        else
+            cout << "NO" << endl;
+    }
+    return 0;
+}
